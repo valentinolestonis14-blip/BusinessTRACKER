@@ -12,7 +12,6 @@
   From Student to Earner
 </p>
 
-
 <!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -32,10 +31,16 @@ body{
     overflow-x:hidden;
 }
 
+/* PREMIUM BACKGROUND LAYER WITH SMOOTH TRANSITION */
+.premium-bg-overlay {
+    transition: background-image 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .glass{
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(16px);
-    border:1px solid rgba(255,255,255,0.08);
+    background: rgba(7, 11, 20, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glow{
@@ -52,11 +57,14 @@ body{
 }
 
 .card-hover{
-    transition:0.3s;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-hover:hover{
     transform: translateY(-5px);
+    background: rgba(15, 23, 42, 0.8);
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.15);
 }
 
 .neon-text{
@@ -99,19 +107,39 @@ body{
 </style>
 </head>
 
-<body class="text-white">
+<body class="text-white relative min-h-screen selection:bg-blue-500 selection:text-white">
 
-<div class="flex min-h-screen">
+<!-- DYNAMIC BG SLIDER FRAMEWORK (EDITABLE & SWIPABLE) -->
+<div id="premiumCarouselBg" class="premium-bg-overlay fixed inset-0 w-full h-full bg-cover bg-center bg-no-repeat z-0 pointer-events-none"
+     data-bg-carousel='[
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=75",
+        "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1920&q=75",
+        "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1920&q=75",
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1920&q=75"
+     ]'>
+    <!-- Dark Elite Tint Overlay to maintain data readability -->
+    <div class="absolute inset-0 bg-gradient-to-br from-[#040814]/95 via-[#070b14]/90 to-[#0c1020]/95"></div>
+</div>
+
+<!-- FLOATING CAROUSEL CONTROLLER FOR SYSTEM BACKGROUND -->
+<div class="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-xl">
+    <button onclick="navigateBg(-1)" class="hover:text-blue-400 transition-colors px-2 font-bold text-lg select-none cursor-pointer">❮</button>
+    <div id="carouselIndicatorDots" class="flex gap-1.5"></div>
+    <button onclick="navigateBg(1)" class="hover:text-blue-400 transition-colors px-2 font-bold text-lg select-none cursor-pointer">❯</button>
+</div>
+
+<!-- APP WRAPPER CONTAINER -->
+<div class="flex min-h-screen relative z-10">
 
 <!-- SIDEBAR -->
-<aside id="sidebar" class="w-72 glass border-r border-white/10 p-6 fixed h-full z-50 overflow-y-auto">
+<aside id="sidebar" class="w-72 glass border-r border-white/10 p-6 fixed h-full z-50 overflow-y-auto transform transition-transform duration-300 lg:transform-none">
 
     <div class="flex items-center justify-between mb-10">
         <h1 class="text-3xl font-black neon-text">
             BusinessPro
         </h1>
 
-        <button onclick="toggleSidebar()" class="lg:hidden">
+        <button onclick="toggleSidebar()" class="lg:hidden text-gray-400 hover:text-white transition-colors">
             ✕
         </button>
     </div>
@@ -165,7 +193,7 @@ body{
 
     <div class="flex justify-between items-center mb-8">
         <div>
-            <h1 class="text-4xl font-black">
+            <h1 class="text-4xl font-black tracking-tight">
                 Premium Dashboard
             </h1>
 
@@ -229,7 +257,7 @@ body{
                     Sales Analytics
                 </h2>
 
-                <button onclick="resetSales()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl">
+                <button onclick="resetSales()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl transition-colors">
                     Reset Sales
                 </button>
             </div>
@@ -266,7 +294,7 @@ body{
             </p>
         </div>
 
-        <button onclick="openProductModal()" class="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-2xl font-bold glow">
+        <button onclick="openProductModal()" class="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-2xl font-bold glow hover:opacity-90 transition-opacity">
             + Add Product
         </button>
 
@@ -275,9 +303,9 @@ body{
     <div class="flex flex-col md:flex-row gap-4 mb-8">
 
         <input id="searchProduct" onkeyup="renderProducts()" type="text" placeholder="Search product..."
-            class="glass p-4 rounded-2xl w-full outline-none">
+            class="glass p-4 rounded-2xl w-full outline-none focus:border-blue-500 transition-colors">
 
-        <button onclick="resetProducts()" class="bg-red-500 hover:bg-red-600 px-6 rounded-2xl">
+        <button onclick="resetProducts()" class="bg-red-500 hover:bg-red-600 px-6 rounded-2xl transition-colors">
             Reset Products
         </button>
 
@@ -309,25 +337,25 @@ body{
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4">
 
             <input id="saleName" type="text" placeholder="Product"
-                class="glass p-4 rounded-2xl outline-none">
+                class="glass p-4 rounded-2xl outline-none focus:border-blue-500 transition-colors">
 
             <input id="saleQuantity" type="number" placeholder="Quantity"
-                class="glass p-4 rounded-2xl outline-none">
+                class="glass p-4 rounded-2xl outline-none focus:border-blue-500 transition-colors">
 
             <input id="salePrice" type="number" placeholder="Price"
-                class="glass p-4 rounded-2xl outline-none">
+                class="glass p-4 rounded-2xl outline-none focus:border-blue-500 transition-colors">
 
             <input id="saleDate" type="date"
-                class="glass p-4 rounded-2xl outline-none">
+                class="glass p-4 rounded-2xl outline-none focus:border-blue-500 transition-colors text-white">
 
-            <select id="saleType" class="glass p-4 rounded-2xl outline-none">
+            <select id="saleType" class="glass p-4 rounded-2xl outline-none focus:border-blue-500 transition-colors text-white bg-slate-900">
                 <option value="Daily">Daily</option>
                 <option value="Weekly">Weekly</option>
                 <option value="Monthly">Monthly</option>
             </select>
 
             <button onclick="addSale()"
-                class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl font-bold">
+                class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl font-bold hover:opacity-90 transition-opacity">
                 Add Sale
             </button>
 
@@ -344,7 +372,7 @@ body{
             </h2>
 
             <button onclick="resetSales()"
-                class="bg-red-500 hover:bg-red-600 px-5 py-2 rounded-xl">
+                class="bg-red-500 hover:bg-red-600 px-5 py-2 rounded-xl transition-colors">
                 Reset All Sales
             </button>
 
@@ -353,7 +381,7 @@ body{
         <table class="w-full">
 
             <thead>
-                <tr class="border-b border-white/10 text-left">
+                <tr class="border-b border-white/10 text-left text-gray-400">
                     <th class="p-4">Product</th>
                     <th class="p-4">Quantity</th>
                     <th class="p-4">Price</th>
@@ -380,7 +408,7 @@ body{
                 </h2>
 
                 <button onclick="resetType('Daily')"
-                    class="bg-red-500 px-4 py-2 rounded-xl">
+                    class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl transition-colors">
                     Reset
                 </button>
             </div>
@@ -395,7 +423,7 @@ body{
                 </h2>
 
                 <button onclick="resetType('Weekly')"
-                    class="bg-red-500 px-4 py-2 rounded-xl">
+                    class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl transition-colors">
                     Reset
                 </button>
             </div>
@@ -410,7 +438,7 @@ body{
                 </h2>
 
                 <button onclick="resetType('Monthly')"
-                    class="bg-red-500 px-4 py-2 rounded-xl">
+                    class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl transition-colors">
                     Reset
                 </button>
             </div>
@@ -437,7 +465,7 @@ body{
             </p>
         </div>
 
-        <button onclick="resetInventory()" class="bg-red-500 px-6 py-3 rounded-2xl">
+        <button onclick="resetInventory()" class="bg-red-500 hover:bg-red-600 px-6 py-3 rounded-2xl transition-colors">
             Reset Inventory
         </button>
 
@@ -447,7 +475,7 @@ body{
 
         <table class="w-full">
             <thead>
-                <tr class="text-left border-b border-white/10">
+                <tr class="text-left border-b border-white/10 text-gray-400">
                     <th class="p-4">Product</th>
                     <th class="p-4">Stock</th>
                     <th class="p-4">Status</th>
@@ -476,13 +504,13 @@ body{
             </p>
         </div>
 
-        <button onclick="openOrderModal()" class="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-2xl">
+        <button onclick="openOrderModal()" class="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-2xl font-bold tracking-wide shadow-lg">
             + Add Order
         </button>
 
     </div>
 
-    <button onclick="resetOrders()" class="bg-red-500 px-6 py-3 rounded-2xl mb-6">
+    <button onclick="resetOrders()" class="bg-red-500 hover:bg-red-600 px-6 py-3 rounded-2xl mb-6 transition-colors">
         Reset Orders
     </button>
 
@@ -509,16 +537,16 @@ body{
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
-        <button onclick="downloadJSON()" class="glass rounded-3xl p-8 hover:bg-blue-500/20">
-            📄 Export JSON
+        <button onclick="downloadJSON()" class="glass rounded-3xl p-8 hover:bg-blue-500/20 transition-colors group">
+            <span class="block text-2xl group-hover:scale-110 transition-transform">📄</span> Export JSON
         </button>
 
-        <button onclick="downloadCSV()" class="glass rounded-3xl p-8 hover:bg-purple-500/20">
-            📊 Export CSV
+        <button onclick="downloadCSV()" class="glass rounded-3xl p-8 hover:bg-purple-500/20 transition-colors group">
+            <span class="block text-2xl group-hover:scale-110 transition-transform">📊</span> Export CSV
         </button>
 
-        <button onclick="resetReports()" class="glass rounded-3xl p-8 hover:bg-red-500/20">
-            🗑 Reset Reports
+        <button onclick="resetReports()" class="glass rounded-3xl p-8 hover:bg-red-500/20 transition-colors group">
+            <span class="block text-2xl group-hover:scale-110 transition-transform">🗑</span> Reset Reports
         </button>
 
     </div>
@@ -533,16 +561,16 @@ body{
 </div>
 
 <!-- PRODUCT MODAL -->
-<div id="productModal" class="modal fixed inset-0 bg-black/70 z-50 items-center justify-center p-4">
+<div id="productModal" class="modal fixed inset-0 bg-black/70 z-50 items-center justify-center p-4 backdrop-blur-sm">
 
-<div class="glass rounded-3xl p-8 w-full max-w-2xl">
+<div class="glass rounded-3xl p-8 w-full max-w-2xl transform scale-95 fade-in">
 
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-3xl font-black">
             Add Product
         </h2>
 
-        <button onclick="closeProductModal()">
+        <button onclick="closeProductModal()" class="text-gray-400 hover:text-white text-xl">
             ✕
         </button>
     </div>
@@ -550,26 +578,26 @@ body{
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
         <input id="productName" type="text" placeholder="Product Name"
-            class="glass p-4 rounded-2xl outline-none">
+            class="glass p-4 rounded-2xl outline-none focus:border-blue-500 transition-colors">
 
         <input id="productPrice" type="number" placeholder="Price"
-            class="glass p-4 rounded-2xl outline-none">
+            class="glass p-4 rounded-2xl outline-none focus:border-blue-500 transition-colors">
 
         <input id="productCategory" type="text" placeholder="Category"
-            class="glass p-4 rounded-2xl outline-none">
+            class="glass p-4 rounded-2xl outline-none focus:border-blue-500 transition-colors">
 
         <input id="productStock" type="number" placeholder="Stock"
-            class="glass p-4 rounded-2xl outline-none">
+            class="glass p-4 rounded-2xl outline-none focus:border-blue-500 transition-colors">
 
         <input id="productImage" type="text" placeholder="Image URL"
-            class="glass p-4 rounded-2xl outline-none md:col-span-2">
+            class="glass p-4 rounded-2xl outline-none md:col-span-2 focus:border-blue-500 transition-colors">
 
         <textarea id="productDescription" placeholder="Description"
-            class="glass p-4 rounded-2xl outline-none md:col-span-2"></textarea>
+            class="glass p-4 rounded-2xl outline-none md:col-span-2 h-28 focus:border-blue-500 transition-colors"></textarea>
 
     </div>
 
-    <button onclick="addProduct()" class="w-full mt-6 bg-gradient-to-r from-blue-500 to-purple-600 p-4 rounded-2xl font-bold">
+    <button onclick="addProduct()" class="w-full mt-6 bg-gradient-to-r from-blue-500 to-purple-600 p-4 rounded-2xl font-bold tracking-wide shadow-lg">
         Save Product
     </button>
 
@@ -577,16 +605,16 @@ body{
 </div>
 
 <!-- ORDER MODAL -->
-<div id="orderModal" class="modal fixed inset-0 bg-black/70 z-50 items-center justify-center p-4">
+<div id="orderModal" class="modal fixed inset-0 bg-black/70 z-50 items-center justify-center p-4 backdrop-blur-sm">
 
-<div class="glass rounded-3xl p-8 w-full max-w-xl">
+<div class="glass rounded-3xl p-8 w-full max-w-xl transform scale-95 fade-in">
 
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-3xl font-black">
             Add Order
         </h2>
 
-        <button onclick="closeOrderModal()">
+        <button onclick="closeOrderModal()" class="text-gray-400 hover:text-white text-xl">
             ✕
         </button>
     </div>
@@ -594,21 +622,21 @@ body{
     <div class="space-y-4">
 
         <input id="customerName" type="text" placeholder="Customer Name"
-            class="glass p-4 rounded-2xl outline-none w-full">
+            class="glass p-4 rounded-2xl outline-none w-full focus:border-blue-500 transition-colors">
 
         <input id="orderProduct" type="text" placeholder="Product"
-            class="glass p-4 rounded-2xl outline-none w-full">
+            class="glass p-4 rounded-2xl outline-none w-full focus:border-blue-500 transition-colors">
 
         <input id="orderQuantity" type="number" placeholder="Quantity"
-            class="glass p-4 rounded-2xl outline-none w-full">
+            class="glass p-4 rounded-2xl outline-none w-full focus:border-blue-500 transition-colors">
 
-        <select id="orderStatus" class="glass p-4 rounded-2xl outline-none w-full">
+        <select id="orderStatus" class="glass p-4 rounded-2xl outline-none w-full text-white bg-slate-900 focus:border-blue-500">
             <option>Pending</option>
             <option>Completed</option>
             <option>Cancelled</option>
         </select>
 
-        <button onclick="addOrder()" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 p-4 rounded-2xl font-bold">
+        <button onclick="addOrder()" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 p-4 rounded-2xl font-bold tracking-wide shadow-lg">
             Save Order
         </button>
 
@@ -618,6 +646,58 @@ body{
 </div>
 
 <script>
+// ================= INTERACTIVE CAROUSEL BUSINESS BACKGROUND IMPLEMENTATION =================
+const bgSliderNode = document.getElementById("premiumCarouselBg");
+const carouselImages = JSON.parse(bgSliderNode.getAttribute("data-bg-carousel"));
+let currentBgIndex = 0;
+
+function updateCarouselUI() {
+    // Palitan ang Active Engine Image
+    bgSliderNode.style.backgroundImage = `url('${carouselImages[currentBgIndex]}')`;
+    
+    // Refresh Navigation Indicator Dots
+    const dotsContainer = document.getElementById("carouselIndicatorDots");
+    dotsContainer.innerHTML = "";
+    carouselImages.forEach((_, index) => {
+        const dot = document.createElement("div");
+        dot.className = `h-2 rounded-full transition-all duration-300 ${index === currentBgIndex ? 'w-5 bg-blue-500' : 'w-2 bg-white/40'}`;
+        dotsContainer.appendChild(dot);
+    });
+}
+
+function navigateBg(direction) {
+    currentBgIndex += direction;
+    if (currentBgIndex >= carouselImages.length) currentBgIndex = 0;
+    if (currentBgIndex < 0) currentBgIndex = carouselImages.length - 1;
+    updateCarouselUI();
+}
+
+// 1. Keyboard Shortcuts (Left/Right Keys)
+window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") navigateBg(-1);
+    if (e.key === "ArrowRight") navigateBg(1);
+});
+
+// 2. Swipable & Drag Gestures (Mobile/Mouse Drag Events)
+let touchStartX = 0;
+let touchEndX = 0;
+
+window.addEventListener("touchstart", e => touchStartX = e.changedTouches[0].screenX, {passive: true});
+window.addEventListener("touchend", e => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipeGesture();
+}, {passive: true});
+
+function handleSwipeGesture() {
+    if (touchStartX - touchEndX > 60) navigateBg(1);  // Swipe Left
+    if (touchEndX - touchStartX > 60) navigateBg(-1); // Swipe Right
+}
+
+// Initialize Dynamic Framework
+updateCarouselUI();
+
+
+// ================= YOUR MAIN CORE ORIGINAL LOGIC ENGINE =================
 let products = JSON.parse(localStorage.getItem("products")) || [];
 let sales = JSON.parse(localStorage.getItem("sales")) || [];
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
@@ -630,7 +710,7 @@ function saveData(){
 
 function showSection(section){
 
-    document.querySelectorAll("section").forEach(sec=>{
+    document.querySelectorAll("main > section").forEach(sec=>{
         sec.classList.add("hidden");
     });
 
@@ -638,7 +718,12 @@ function showSection(section){
 }
 
 function toggleSidebar(){
-    document.getElementById("sidebar").classList.toggle("-translate-x-full");
+    const sidebar = document.getElementById("sidebar");
+    if(sidebar.classList.contains("-translate-x-full")) {
+        sidebar.classList.remove("-translate-x-full");
+    } else {
+        sidebar.classList.add("-translate-x-full");
+    }
 }
 
 function openProductModal(){
@@ -682,7 +767,8 @@ function addProduct(){
 
 function renderProducts(){
 
-    let search = document.getElementById("searchProduct").value.toLowerCase();
+    let searchInput = document.getElementById("searchProduct");
+    let search = searchInput ? searchInput.value.toLowerCase() : "";
 
     let html = "";
 
@@ -692,23 +778,23 @@ function renderProducts(){
 
         html += `
         <div class="glass rounded-3xl overflow-hidden card-hover">
-            <img src="${product.image}" class="w-full h-56 object-cover">
+            <img src="${product.image}" class="w-full h-56 object-cover" onerror="this.src='https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80'">
 
             <div class="p-6">
                 <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-2xl font-bold">${product.name}</h2>
-                    <span class="text-blue-400 font-bold">₱${product.price}</span>
+                    <h2 class="text-2xl font-bold truncate mr-2">${product.name}</h2>
+                    <span class="text-blue-400 font-bold shrink-0">₱${product.price}</span>
                 </div>
 
-                <p class="text-gray-400 mb-4">${product.description}</p>
+                <p class="text-gray-400 mb-4 h-12 overflow-hidden text-ellipsis">${product.description}</p>
 
                 <div class="flex justify-between items-center">
-                    <span class="glass px-4 py-2 rounded-xl">
+                    <span class="glass px-4 py-2 rounded-xl text-sm">
                         ${product.stock} Stocks
                     </span>
 
                     <button onclick="deleteProduct(${product.id})"
-                        class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl">
+                        class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl transition-colors text-sm">
                         Delete
                     </button>
                 </div>
@@ -780,7 +866,7 @@ function renderSalesTable(){
     sales.forEach(sale => {
 
         html += `
-        <tr class="border-b border-white/10">
+        <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
 
             <td class="p-4">${sale.name}</td>
 
@@ -797,7 +883,7 @@ function renderSalesTable(){
             <td class="p-4">${sale.date}</td>
 
             <td class="p-4">
-                <span class="glass px-4 py-2 rounded-xl">
+                <span class="glass px-3 py-1 rounded-xl text-xs">
                     ${sale.type}
                 </span>
             </td>
@@ -805,7 +891,7 @@ function renderSalesTable(){
             <td class="p-4">
 
                 <button onclick="deleteSale(${sale.id})"
-                    class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl">
+                    class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded-xl transition-colors text-xs">
                     Delete
                 </button>
 
@@ -855,7 +941,7 @@ function renderOrders(){
     orders.forEach(order=>{
 
         html += `
-        <div class="glass rounded-3xl p-6 flex flex-col md:flex-row justify-between gap-4">
+        <div class="glass rounded-3xl p-6 flex flex-col md:flex-row justify-between gap-4 items-start md:items-center">
 
             <div>
                 <h2 class="text-2xl font-bold">
@@ -867,14 +953,14 @@ function renderOrders(){
                 </p>
             </div>
 
-            <div class="flex gap-4 items-center">
+            <div class="flex gap-4 items-center w-full md:w-auto justify-between md:justify-end">
 
-                <span class="glass px-4 py-2 rounded-xl">
+                <span class="glass px-4 py-2 rounded-xl text-sm font-medium">
                     ${order.status}
                 </span>
 
                 <button onclick="deleteOrder(${order.id})"
-                    class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl">
+                    class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl transition-colors text-sm">
                     Delete
                 </button>
 
@@ -904,16 +990,16 @@ function renderInventory(){
     products.forEach(product=>{
 
         html += `
-        <tr class="border-b border-white/10">
-            <td class="p-4">${product.name}</td>
+        <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+            <td class="p-4 font-medium">${product.name}</td>
 
             <td class="p-4">${product.stock}</td>
 
             <td class="p-4">
                 ${product.stock <= 5 ?
-                    '<span class="text-red-400">Low Stock</span>'
+                    '<span class="text-red-400 font-semibold">Low Stock</span>'
                     :
-                    '<span class="text-green-400">In Stock</span>'
+                    '<span class="text-green-400 font-semibold">In Stock</span>'
                 }
             </td>
         </tr>
@@ -927,7 +1013,7 @@ function updateDashboard(){
 
     let revenue = sales.reduce((a,b)=> a + Number(b.amount), 0);
 
-    document.getElementById("totalRevenue").innerHTML = "₱" + revenue;
+    document.getElementById("totalRevenue").innerHTML = "₱" + revenue.toLocaleString();
 
     document.getElementById("totalProducts").innerHTML = products.length;
 
@@ -1075,7 +1161,7 @@ function createChart(id, labels, data, label){
             datasets:[{
                 label:label,
                 data:data,
-                borderWidth:2,
+                borderWidth:0,
                 borderRadius:12,
                 backgroundColor:[
                     "#3b82f6",
@@ -1093,21 +1179,26 @@ function createChart(id, labels, data, label){
             plugins:{
                 legend:{
                     labels:{
-                        color:"white"
+                        color:"white",
+                        font: { family: "'Inter', sans-serif" }
                     }
                 }
             },
 
             scales:{
                 x:{
+                    grid: { color: 'rgba(255,255,255,0.05)' },
                     ticks:{
-                        color:"white"
+                        color:"rgba(255,255,255,0.7)",
+                        font: { family: "'Inter', sans-serif" }
                     }
                 },
 
                 y:{
+                    grid: { color: 'rgba(255,255,255,0.05)' },
                     ticks:{
-                        color:"white"
+                        color:"rgba(255,255,255,0.7)",
+                        font: { family: "'Inter', sans-serif" }
                     }
                 }
             }
@@ -1143,6 +1234,7 @@ function updateCharts(){
 
             datasets:[{
                 data:products.map(p=>p.stock),
+                borderWidth: 0,
                 backgroundColor:[
                     "#3b82f6",
                     "#8b5cf6",
@@ -1151,6 +1243,17 @@ function updateCharts(){
                     "#f59e0b"
                 ]
             }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'white',
+                        font: { family: "'Inter', sans-serif" }
+                    }
+                }
+            }
         }
     });
 
@@ -1183,6 +1286,7 @@ function updateCharts(){
     );
 }
 
+// Initial Data Loading Call setup
 renderProducts();
 renderInventory();
 renderOrders();
